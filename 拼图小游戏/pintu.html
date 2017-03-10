@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>拼图</title>
+	<style type="text/css">
+	body{
+		background: #000;
+	}
+		#box{
+			margin-left: 300px;
+			width: 725px;
+			height: 614px;
+			border: 2px solid pink;
+			position: relative;
+		}
+		table{
+			margin: 0px;
+			padding: 0px;
+			width: 610px;
+			height: 610px;
+			float: left;
+		}
+		td{
+           /*width: 200px;
+           height: 200px;*/
+           margin: 0px;
+           padding: 0px;
+           cursor: pointer;
+           background: url(9.jpg) no-repeat;
+           border: 1px solid #fff;
+		}
+		#image{
+			position: absolute;
+			width: 100px;
+			height: 100px;
+			right: 10px;
+			bottom: 10px; 
+		}
+	</style>
+</head>
+<body>
+	<div id="box">
+		<img id="image" src="9.jpg" width=100% height=100% />
+	</div>
+	<script type="text/javascript">
+	first();//关卡1启动
+		function first(){
+			var oBox=document.getElementById('box');
+			//获取到box元素以便添加table
+	        var oTable=document.createElement('table');//创建table
+	        oBox.appendChild(oTable);//向box中添加table
+	        var arr=[];//创建数组，以便存放td个json
+	        var num=0;//json中的seq,调用win函数时会用到
+             for(var i=0;i<3;i++){//创建3个tr
+             	var oTr=document.createElement('tr');
+             	for(var j=0;j<3;j++){//创建9个td
+             		num++;
+             		var oTd=document.createElement('td');
+             		var json={seq:num,bg:-200*j+'px '+-200*i+'px'};
+             		//创建9个json
+             		oTr.appendChild(oTd);//将td添加到tr中
+             		arr.push(json)//将json存入数组中
+             	}
+             	oTable.appendChild(oTr);//向table中添加tr
+             }
+          var aTd=document.getElementsByTagName('td');//获取到已创建的9个td
+          aTd[aTd.length-1].style.opacity=0;//将最后一个td的透明度设置为0
+          for(var i=0;i<aTd.length;i++){//将json分别赋给相应的td
+          	aTd[i].json=arr[i];
+          	aTd[i].style.backgroundPosition=aTd[i].json.bg;
+          	//获取到json里关于背景图片的定义并赋给各自的td
+          }
+           var rows=oTable.rows;//获取table的排数
+	for(var i=0;i<3;i++){
+
+		for(var j=0;j<3;j++){
+
+			rows[i].cells[j].Y=i;    //第i行第j个元素的Y值为i
+			rows[i].cells[j].X=j;    //第i行第j个元素的X值为j
+			rows[i].cells[j].onclick=function (){
+			//第i行第j个元素被点击时触发的事件
+				var arr=[//将该元素前后左右坐标存在数组中
+					[this.Y-1 , this.X],//上
+					[this.Y   , this.X+1],//右
+					[this.Y+1 , this.X],//下
+					[this.Y   , this.X-1],//左
+				];
+
+				for(var i=0;i<arr.length;i++){
+					if( arr[i][0]<0 || arr[i][1]<0 || arr[i][0]>2 || arr[i][1]>2 )continue;
+					//如果周围的坐标有不在table中的终止循环
+					if( rows[arr[i][0] ].cells[ arr[i][1] ].style.opacity=='0'){
+					//如果周围有透明度为0的 
+						rows[arr[i][0] ].cells[ arr[i][1] ].style.opacity=1;
+						//将其透明度设置为1
+						this.style.opacity=0;
+						//此图片透明度设置为0
+						var jsoner=this.json;
+						this.json=rows[arr[i][0] ].cells[ arr[i][1] ].json;
+						rows[arr[i][0] ].cells[ arr[i][1] ].json=jsoner;
+						//交换双方的json
+						this.style.backgroundPosition=this.json.bg;
+						rows[arr[i][0] ].cells[ arr[i][1] ].style.backgroundPosition=rows[arr[i][0] ].cells[ arr[i][1] ].json.bg;
+						//各自刷新背景图片的位置
+					}
+				}
+				win(aTd,oBox,oTable);//调用win函数，看是否胜利
+			};
+		}
+        stratMove(aTd,oTable,arr);//调用stratMove函数，使td乱序排列
+	}
+}
+
+
+
+
+function gks(){           //关卡2，思路同关卡1
+	var oBox=document.getElementById('box');
+	var oTable=document.createElement('table');
+	oBox.appendChild(oTable);
+	var arr=[];
+	var num=0;
+      for(var i=0;i<4;i++){
+      	var oTr=document.createElement('tr');
+      	for(var j=0;j<4;j++){
+      	    num++;
+      		var oTd=document.createElement('td');
+            var json={seq:num,bg:-150*j+'px '+-150*i+'px'};
+            arr.push(json)
+            oTr.appendChild(oTd);
+      	}
+      	oTable.appendChild(oTr);
+      }
+      var aTd=document.getElementsByTagName('td');
+      aTd[aTd.length-1].style.opacity=0;
+      for(var i=0;i<aTd.length;i++){
+      	aTd[i].json=arr[i];
+      	aTd[i].style.backgroundPosition=aTd[i].json.bg;
+      }
+      var rows=oTable.rows;
+      for(var i=0;i<4;i++){
+      	for(var j=0;j<4;j++){
+      		rows[i].cells[j].Y=i;
+      		rows[i].cells[j].X=j;
+        rows[i].cells[j].onclick=function(){
+        	var arr=[
+        	[this.Y-1,this.X],
+        	[this.Y+1,this.X],
+        	[this.Y,this.X-1],
+        	[this.Y,this.X+1]
+        	];
+        	for(var i=0;i<arr.length;i++){
+        		if(arr[i][0]<0||arr[i][1]<0||arr[i][0]>3||arr[i][1]>3){
+        			continue;
+        		}
+        		if(rows[arr[i][0]].cells[arr[i][1]].style.opacity==0){
+                   rows[arr[i][0]].cells[arr[i][1]].style.opacity=1;
+                   this.style.opacity=0;
+                   var aJson=rows[arr[i][0]].cells[arr[i][1]].json;
+                   rows[arr[i][0]].cells[arr[i][1]].json=this.json;
+                   this.json=aJson;
+                   rows[arr[i][0]].cells[arr[i][1]].style.backgroundPosition=
+                   rows[arr[i][0]].cells[arr[i][1]].json.bg;
+                   this.style.backgroundPosition=this.json.bg;
+        		}
+        	}
+        	win(aTd,oBox,oTable);
+        }
+      	}
+      	stratMove(aTd,oTable,arr);
+      }
+}
+
+
+
+
+
+
+
+
+
+
+function stratMove(dTd,oTable,arr){     //传多个参数要用逗号隔开
+setTimeout(function(){   //渐变
+      var iAlpha = 100;
+      var sp = -10;
+      var arr1=arr;
+      var timer = setInterval(function(){
+        iAlpha += sp;
+        oTable.style.opacity = iAlpha / 100;
+        if(iAlpha <=0){sp = -sp;ranPic(arr1);}
+        if(iAlpha > 100)clearInterval(timer);
+      },15);
+    },3000);
+    function ranPic(arr1){    //使td乱序
+      arr1.sort(function (){
+        return Math.random()-0.5;                                           //sort为数组排序，Math.random()获取到0-1的随机数。sort根据值的正负决定升序还是降序，所以要使返回值有正有负       
+        });
+      for(var i=0;i<dTd.length;i++){   //获取到乱序后的td排列并更新背景位置
+        dTd[i].json=arr1[i];
+        dTd[i].style.backgroundPosition=dTd[i].json.bg;
+      }
+    }
+}
+function win(aTd,aBox,aTable){
+		var aJson=[];
+		for(var i=0;i<aTd.length;i++){
+			aJson.push(aTd[i].json.seq);
+		}
+		for(var i=0;i<aJson.length-1;i++){
+			if(aJson[i]>aJson[i+1])return;
+		}
+		for(var i=0;i<aTd.length;i++){
+			aTd[i].style.opacity=1;
+		}
+		alert('胜利！');
+		aBox.removeChild(aTable);
+		gks();
+	}
+
+
+	</script>
+	</body>
+	</html>

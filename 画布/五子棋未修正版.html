@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>五子棋</title>
+	<style>
+		body{
+			margin: 0px;
+			padding: 0px;
+			background: black;
+			position: relative;
+		}
+        #play{
+        	margin-left: 200px;
+        	background: #c0c0c0;
+        }
+        #bBt{
+        	position: absolute;
+        	width: 50px;
+        	height: 30px;
+
+        }
+        span{
+        	position: absolute;
+        	top: 40px;
+        	left: 850px;
+        	width: 100px;
+        	height: 30px;
+            color: #fff;
+        }
+	</style>
+</head>
+<body>
+	
+		<canvas id="play" width="640px" height="640px"></canvas>
+        <button id="bBt">开始</button>
+        <span id="span">请先按开始</span>
+        
+</body>
+<script>
+	window.onload=function(){
+		var bBtu=document.getElementById('bBt');
+		var oSpan=document.getElementById('span');
+		var can=document.getElementById('play');
+		var ctx=can.getContext('2d');
+		var arr11=[];
+		var arr12=[];
+		var arr21=[];
+		var arr22=[];
+        var arr31=[];
+        var arr32=[];
+		ctx.moveTo(20,20);
+		ctx.lineTo(20,620);
+		ctx.lineTo(620,620);
+		ctx.lineTo(620,20);
+		ctx.lineTo(20,20);
+
+		ctx.stroke();
+		for(var i=20;i<620;i=i+40){
+          ctx.moveTo(20,i);
+          ctx.lineTo(620,i);
+          ctx.stroke();
+          ctx.moveTo(i,20);
+          ctx.lineTo(i,620);
+          ctx.stroke();
+		}
+		for(var j=20;j<640;j=j+40){
+           for(var k=20;k<640;k=k+40){
+             ctx.beginPath();
+             ctx.arc(j,k,3,0,2*Math.PI,false);
+             ctx.closePath();
+             ctx.fill(); 
+           }
+		}
+		var a=Math.random();
+		var b=Math.random();
+        bBtu.onmousedown=function(){
+            
+		    if (a>b) {
+            oSpan.innerHTML="此局黑子先落";
+        }else{
+        	oSpan.innerHTML="此局白子先落";
+        }
+	
+
+		}
+		can.onmousedown=function(ev){
+            var e=ev||window.event;
+            var X=e.clientX;
+            var Y=e.clientY;
+            var x=Math.floor((X-220)/40)*40+40;
+            var y=Math.floor((Y-20)/40)*40+40;
+            arr31=arr11;
+            arr31+=arr21;
+            alert(arr11);
+            alert(arr21);
+            alert(arr31);
+            if(a>b){
+
+            	b=2;
+            	ctx.fillStyle='#000';
+                ctx.beginPath();
+                ctx.arc(x,y,16,0,2*Math.PI,false);
+                ctx.closePath();
+                ctx.fill();
+                a=1;
+                arr11.push(x);
+                arr12.push(y);
+                for(var n=0;n<arr21.length;n++){
+                    if(x==arr21[n]&&y==arr22[n]){
+                        alert("请不要重复落子");
+                    }else{
+                        win(1);
+                    }
+                }
+                
+            }else{
+            	a=2;
+            	ctx.fillStyle='#fff';
+                ctx.beginPath();
+                ctx.arc(x,y,16,0,2*Math.PI,false);
+                ctx.closePath();
+                ctx.fill();
+                b=1;
+                arr21.push(x);
+                arr22.push(y);
+                win(2);
+            }
+            
+		}
+		function win(a){
+			
+			if(a==1){
+              for(var i=0;i<arr11.length;i++){
+              	var arr111=[1,1,1,1];
+			    
+                 for(var j=0;j<arr11.length;j++){
+                     if(arr11[i]==arr11[j]&&((arr12[i]-arr12[j])==40||(arr12[i]-arr12[j])==80||(arr12[i]-arr12[j])==120||(arr12[i]-arr12[j])==160)){
+                        arr111[0]++;
+                        if(arr111[0]==5){
+                        	alert("此局黑子胜");
+                        }
+                     }else if(arr12[i]==arr12[j]&&((arr11[i]-arr11[j])==40||(arr11[i]-arr11[j])==80||(arr11[i]-arr11[j])==120||(arr11[i]-arr11[j])==160)){
+                         arr111[1]++;
+                         if(arr111[1]==5){
+                         	alert("此局黑子胜");
+                         }
+                     }
+                     	for(var c=1;c<5;c++){
+                     		if (arr11[i]-arr11[j]==c*40&&arr12[i]-arr12[j]==c*40) {
+                     			arr111[2]++;
+                                if(arr111[2]==5){
+                         	    alert("此局黑子胜");
+                                }
+                     		}
+                     		if (arr11[i]-arr11[j]==c*40&&arr12[i]-arr12[j]==c*(-40)) {
+                     			    arr111[3]++;
+                                        if(arr111[3]==5){
+                         	            alert("此局黑子胜");
+                                        }
+                                    }
+                     	    }
+                     	
+                      }
+                 }
+              }
+              if(a==2){
+			  for(var n=0;n<arr21.length;n++){
+
+			  	var arr222=[1,1,1,1];
+                for(var m=0;m<arr21.length;m++){
+                  
+                     if(arr21[n]==arr21[m]&&((arr22[n]-arr22[m])==40||(arr22[n]-arr22[m])==80||(arr22[n]-arr22[m])==120||(arr22[n]-arr22[m])==160)){
+                        arr222[0]++;
+                        if(arr222[0]==5){
+                        	alert("此局白子胜");
+                        }
+                     }else if(arr22[n]==arr22[m]&&((arr21[n]-arr21[m])==40||(arr21[n]-arr21[m])==80||(arr21[n]-arr21[m])==120||(arr21[n]-arr21[m])==160)){
+                         arr222[1]++;
+                         if(arr222[1]==5){
+                         	alert("此局白子胜");
+                         }
+                     }
+                     for(var d=1;d<5;d++){
+                     		if (arr21[n]-arr21[m]==d*40&&arr22[n]-arr22[m]==d*40) {
+                     			arr222[2]++;
+                                if(arr222[2]==5){
+                         	    alert("此局白子胜");
+                                }
+                     		}
+                     		if (arr21[n]-arr21[m]==d*40&&arr22[n]-arr22[m]==d*(-40)) {
+                     			    arr222[3]++;
+                                        if(arr222[3]==5){
+                         	            alert("此局白子胜");
+                                        }
+                                    }
+                     	    }
+                
+                }
+			  }
+			}
+            
+		}
+	}
+</script>
+</html>

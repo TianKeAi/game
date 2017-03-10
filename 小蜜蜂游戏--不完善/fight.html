@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>打飞机小游戏</title>
+
+ <!--  css部分 -->
+   <style type="text/css">
+   body{
+   	width: 100%;
+   	height: 100%;
+   	background: #000;
+   	margin: 0px;
+   	padding: 0px;
+   	/*position: relative;*/
+   }
+   #box{     /*框*/
+   	width: 1349px;
+   	height: 580px;
+   	margin: 0px;
+   	padding: 0px;
+   	background: #000;
+   	position: relative;
+   }
+   #socre{   /*分数*/
+   	width: 100px;
+   	height: 20px;
+   	margin: 0px;
+   	padding: 0px;
+   	color: #fff;
+   	text-align: center;
+   	border: 1px solid #fff;
+   }
+   #aUl{     /*ul标签*/
+   	width: 340px;
+   	height: 80px;
+   	padding: 0px;
+   	position: absolute;
+   	left: 500px;
+   	top: 50px;
+   	background: #000;
+   }
+   #oBu{       /*开始游戏的标签*/
+     position: absolute;
+     width: 200px;
+     height: 72px;
+     left: 600px;
+     top:200px;
+     font-family: "微软雅黑";
+     font-size: 24px;
+     text-align: center;
+     color: #fff;
+     border: 2px solid #fff;
+   }
+   #oBu div{       /*单人游戏and双人游戏*/ 
+   	font-size: 16px;
+   	text-align: center;
+     color: red;
+   }
+   #strat_1{    /*单人*/
+   	background:#fff;
+   }
+   .bee1{     /*第一级小蜜蜂样式*/
+   	width: 34px;
+   	height: 20px;
+   	margin: 0px;
+   	padding: 0px;
+   	list-style: none;
+   	float: left;
+   	background: url(images/2.jpg) no-repeat;
+   }
+   .bee2{     /*第一级小蜜蜂样式*/
+   	width: 34px;
+   	height: 20px;
+   	margin: 0px;
+   	padding: 0px;
+   	list-style: none;
+   	float: left;
+   	background: url(images/3.jpg) no-repeat;
+   }
+  #fight{     /*飞机的样式*/
+   	width:35px;
+   	height: 40px;
+   	position: absolute;
+   	left:680px;
+    bottom: 0px; 
+   	background: url(images/plane.jpg) no-repeat;
+   }
+    #fight1{     /*飞机的样式*/
+   	width:50px;
+   	height: 50px;
+   	margin: 0px;
+   	padding:0px;
+   	position: absolute;
+    bottom: 0px; 
+   	background: url(images/boon.jpg) no-repeat;
+   }
+   .ball{     /*子弹的样式*/
+   	position: absolute;
+   	width: 1px;
+   	height: 3px;
+   	background: url(images/ball.jpg);
+   }
+   </style>
+</head>
+
+<!-- html部分 -->
+<body>
+<div id="box">
+	<span id="oBu">开始游戏<div id="strat_1">单人</div><div id="strat_2">双人</div></span>
+</div>
+
+<!-- js部分 -->
+	<script type="text/javascript">
+
+	var oBox=document.getElementById('box');
+            var oSpan=document.getElementById('oBu');
+            var oStrat=document.getElementById('strat_1');
+            var aStrat=document.getElementById('strat_2');
+            var f=0;
+            //获取到开始游戏的方式
+            var num=1;
+            var bBt=true;
+            strat();
+            //选择游戏方法启动
+            function strat(){    //选择游戏方式
+            document.onkeydown=function(en){
+             	var en=en||window.event;
+             	//左上右下的值分别为37,38,39,40.enter为13，空格为32
+             	if(en.keyCode==38){
+                   num=1;
+             	}else{
+             		if(en.keyCode==40){
+                   num=2;
+             		}
+             	}
+             	if(num==1){
+             		//当enter按下时单人游戏模式启动
+            	aStrat.style.background='black';
+                oStrat.style.background='white';
+                // oStrat.focus();
+                document.onkeypress=function(en){
+                	var en=en||window.event;
+                	if (en.keyCode==13) {
+                		oSpan.style.display='none';
+                		gk1();
+                	}
+                }
+                }
+            else{
+            	//双人游戏启动
+            	aStrat.style.background='white';
+                oStrat.style.background='black';
+                document.onkeypress=function(en){
+                	var en=en||window.event;
+                	if (en.keyCode==13) {
+                		gk2();
+                	}
+                 }
+              }
+          }
+      }
+           // var Game={            //单体的写法
+           // 	 gk1:function(){
+           // 	 	alert(oBox.offsetWidth);
+           // 	 	this.createSocre();
+           // 	 },
+           // 	 createSocre:function(){
+           // 	 	var oS=document.createElement('div');
+           //      oS.id='socre';
+           //      oS.innerHTML='积分：<span>0</span>';
+           //      oBox.appendChild(oS);
+           // 	 }
+           // };
+           function gk1(){   //普通写法
+           	var oS=document.createElement('div');
+           	  oS.id='socre';
+           	 oS.innerHTML='积分:'+f;
+             oBox.appendChild(oS);
+             var arr=[];
+             var bee={      //小蜜蜂的json
+             	beeAt:{
+             		em1:{style:'bee1',blood:1,speed:5,score:1},
+             		em2:{style:'bee2',blood:2,speed:7,score:2},
+             	},
+             	aMap:{
+             		bMap:[
+                 'em2','em2','em2','em2','em2','em2','em2','em2','em2','em2',
+                 'em2','em2','em2','em2','em2','em2','em2','em2','em2','em2',
+                 'em1','em1','em1','em1','em1','em1','em1','em1','em1','em1',
+                 'em1','em1','em1','em1','em1','em1','em1','em1','em1','em1'
+             	],
+                   colNum:10,
+                   //
+                   iSpeedX:10,
+                   //
+                   iSpeedY:10,
+                   //
+                   times:2000
+             },
+             crTe:function(){    //创建40个小蜜蜂
+             	var beeNum=bee.aMap.bMap.length;
+             	//得到小蜜蜂的个数
+             	var beeArr=bee.aMap.bMap;
+                var oUl=document.createElement('ul');
+                oBox.appendChild(oUl);
+                oUl.id='aUl';
+
+                for(var i=0;i<beeNum;i++){
+                	//根据地图给li分别定义样式，这里写得偷懒了，有时间要改过来
+                	var oLi=document.createElement('li');
+                	oUl.appendChild(oLi);
+
+                	if(beeArr[i]=='em1'){
+                	oLi.className='bee1';
+                  
+
+                }else{
+                	if(beeArr[i]=='em2'){
+                		oLi.className="bee2";
+                	}
+                }
+                arr.push([oLi.offsetLeft,oLi.offsetTop]);
+                // alert(arr[i]);
+                // bee.move1(oLi);
+             }
+             bee.move1();
+         },
+        move:function(){  
+             var iSpeed=-10;
+             var iSpeedT=10;  //小蜜蜂的整体作战
+             setInterval(function(){
+             	var aUl=document.getElementById('aUl');
+                if (aUl.offsetLeft<=0) {
+                	//如果碰到了左边框，left++
+                	iSpeed=10;
+                	aUl.style.top=aUl.offsetTop+iSpeedT+'px';
+                }
+                	aUl.style.left=aUl.offsetLeft+iSpeed+'px';
+                if (aUl.offsetLeft==1000) {
+                	//如果碰到了右边框，left--
+                	iSpeed=-10;
+                	aUl.style.top=aUl.offsetTop+iSpeedT+'px';
+                }
+             },100)
+        },
+        move1:function(){  
+          //小蜜蜂的单兵作战
+          var bUl=document.getElementById('aUl');
+          var aLi=bUl.getElementsByTagName('li');
+          // setInterval(function(){
+          // 	var num=parseInt(Math.random()*40);
+          // },5000);
+          for(var i=0;i<aLi.length;i++){
+              aLi[i].style.position="absolute";
+              aLi[i].style.left=arr[i][0]+'px';
+              aLi[i].style.top=arr[i][1]+'px';
+          }
+          var bA=document.getElementById("fight");
+          var timer1=null;
+          var timer=null;
+         setInterval(function(){
+          	var num=parseInt(Math.random()*40);
+      if (aLi[num]!=undefined) {
+          timer=setInterval(function(){
+           var bTop=aLi[num].offsetTop+bUl.offsetTop;
+           var tLeft=bA.offsetLeft-aLi[num].offsetLeft-bUl.offsetLeft;
+           var tTop=bA.offsetTop-bTop;
+           var sPeedz=tLeft/tTop;
+           aLi[num].style.position="absolute";
+           aLi[num].style.left=aLi[num].offsetLeft+10*sPeedz+'px';
+           aLi[num].style.top=aLi[num].offsetTop+10+'px';
+           bee.die(aLi,bA);
+          if(bTop>=580){
+          	clearInterval(timer);
+          	bUl.removeChild(aLi[num]);
+          }
+          },200)}
+      },9000)
+        },
+
+         plane:function(){     //飞机的移动
+             var aA=document.createElement('div');
+             oBox.appendChild(aA);
+             aA.id="fight";
+             var num=0;
+             document.onkeydown=function(en){
+             	var en=en||window.event;
+             	if(en.keyCode==37){
+                  num=1;
+             	}else{
+             		if (en.keyCode==39){
+             			num=2;
+             		}else{
+             			if (en.keyCode==32) {
+             				num=3;
+             			}
+             		}
+             	}
+             	if (num==1) {
+                   aA.style.left=aA.offsetLeft-10+'px';
+             	}else{
+             		if (num==2) {
+                   aA.style.left=aA.offsetLeft+10+'px';
+             		}else{
+             			if (num==3) {
+             				var aLeft=aA.offsetLeft;
+             				bee.biuBiu(aLeft);
+             			}
+             		}
+             	}
+             }
+            },
+            biuBiu:function(aAleft){    //子弹的移动
+            	var aBall=document.createElement('div');
+            	//创建子弹
+            	var bUl=document.getElementById('aUl');
+            	//获取到小蜜蜂整体
+            	var bLi=bUl.getElementsByTagName('li');
+            	//获取到所有单个小蜜蜂
+         
+            	oBox.appendChild(aBall);
+            	//向游戏中添加子弹
+            	aBall.className="ball";
+            	//给子弹添加样式
+            	aBall.style.left=aAleft+17+'px';
+            	//动态创建子弹的left
+            	aBall.style.top=538+'px';
+            	//动态创建子弹的top
+            	var timer=null;
+              var oS=document.getElementById('socre');
+              for(var j=0;j<bLi.length;j++){
+                if (bLi[j].className=='bee1') {
+                  bLi[j].index=1;
+                }else if(bLi[j].className=='bee2'){
+                  bLi[j].index=2;
+                }
+              }
+            	timer=setInterval(function(){
+            	//子弹每30秒向上运动10px
+            		aBall.style.top=aBall.offsetTop-10+'px';
+            		if (aBall.offsetTop<=(bUl.offsetTop+bUl.offsetHeight)) {
+            		for(var i=bLi.length-1;i>=0;i--){
+   
+            	    var tLeft=bLi[i].offsetLeft+bUl.offsetLeft;
+             	    var tTop=bLi[i].offsetTop+bUl.offsetTop;
+             	    var bLeft=aBall.offsetLeft;
+            		if (tTop<aBall.offsetTop&&bLeft>tLeft&&bLeft<tLeft+bLi[0].offsetWidth) {
+            			// var num=i;
+            		   if (bLi[i].className=='bee1') {
+                    bLi[i].index--;
+
+                    f=f+1;
+                   
+                    
+                   }else if (bLi[i].className=='bee2') {
+
+                    f=f+2;
+                    bLi[i].index--;
+                                       
+                   }
+                    if(bLi[i].index==0){
+                        clearInterval(timer);  //必须先清除定时器再清除子弹
+                      //如果子弹出了游戏框或者击中敌人
+                      // }
+                      // oBox.removeChild(aBall);
+                      //删除该子弹
+                       bUl.removeChild(bLi[i]);
+                        
+                       oBox.removeChild(aBall);
+                    }
+                   oS.innerHTML='积分:'+f;
+            		// 	clearInterval(timer);  //必须先清除定时器再清除子弹
+            		// //如果子弹出了游戏框或者击中敌人
+            		// // }
+            		// 	// oBox.removeChild(aBall);
+            		// 	//删除该子弹
+            		// 	bUl.removeChild(bLi[i]);
+                        
+            		// 	oBox.removeChild(aBall);
+            		}
+            			if (aBall.offsetTop<=0){
+            			clearInterval(timer);  
+            			//必须先清除定时器再清除子弹
+            		//如果子弹出了游戏框或者击中敌人
+            		// }
+            			// oBox.removeChild(aBall);
+            			//删除该子弹
+            			oBox.removeChild(aBall); 
+            		}
+            }
+        }
+            	}, 30)
+            },
+            die:function(aLi,bA){
+            //判断飞机是否要狗带 
+            var bUl=document.getElementById('aUl');
+             for(var i=0;i<aLi.length;i++){
+             	var tLeft=aLi[i].offsetLeft+bUl.offsetLeft;
+             	var tTop=aLi[i].offsetTop+bUl.offsetTop;
+             	var bLeft=bA.offsetLeft+bA.offsetWidth;
+             	if(tTop>bA.offsetTop&&bLeft>tLeft||tTop>bA.offsetTop&&bA.offsetLeft<tLeft){
+             		var newLeft=bA.offsetLeft;
+             		bA.id="fight1";
+             		bA.style.left=newLeft+'px';
+             		bA.style.bottom=-10+'px';
+                    bUl.removeChild(aLi[i]);
+                    alert("Gameover");
+                    oBox.removeChild(socre);
+                    oBox.removeChild(bA);
+                    oBox.removeChild(bUl);
+                    oSpan.style.display='block';
+             	}
+             }
+            }
+        };
+             bee.plane();
+             bee.crTe();
+             bee.move();
+      }
+           
+
+
+
+
+
+
+
+
+
+
+           function gk2(){
+             oSpan.style.display='none';
+           }
+	</script>
+</body>
+</html>

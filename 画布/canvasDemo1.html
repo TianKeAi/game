@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>html5</title>
+	<style>
+		body{
+			background: pink;
+		}
+		#can{
+			width: 400px;
+			height: 200px;
+			border:black 1px solid;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="can"></canvas>
+	<span id="canv"></span>
+</body>
+<script>
+	window.onload=function(){
+		var c=document.getElementById('can');
+		var cxt=c.getContext('2d');
+		      // 获取坐标，有延迟
+		// c.onmouseover=function(ev){
+		// var e=ev||window.event;
+        //       x=e.clientX;
+        //       y=e.clientY;
+        
+        //       document.getElementById("canv").innerHTML="Coordinates: (" + x + "," + y + ")"; 
+        //   }
+        //       function cnvs_clearCoordinates(){
+        //       document.getElementById("canv").innerHTML="";
+        //   }
+		       // 填充画布
+		// cxt.fillStyle="#ccc";
+        //       cxt.fillRect(5,10,150,60); x,y,x,y
+		      // 渐变
+		// var grd=cxt.createLinearGradient(0,0,175,50);
+		// grd.addColorStop(0,"black");
+        //       grd.addColorStop(1,"#ffffff");
+        //       cxt.fillStyle=grd;
+        //       cxt.fillRect(5,10,175,50);
+		     // 画方框
+		// cxt.moveTo(10,10);
+		// cxt.lineTo(10,50);
+		// cxt.lineTo(50,50);
+		// cxt.lineTo(50,10);
+		// cxt.lineTo(10,10);
+		// cxt.stroke();
+		    // 画圆
+		cxt.fillStyle='gray';
+		cxt.beginPath();
+		cxt.arc(20,20,10,0,Math.PI*2,true);
+        cxt.closePath();
+        cxt.fill();
+	}
+</script>
+</html>
